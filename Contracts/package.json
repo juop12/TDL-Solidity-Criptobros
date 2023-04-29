@@ -1,0 +1,13 @@
+{
+  "name": "hardhat-project",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.8.3",
+    "alchemy-sdk": "^2.8.1",
+    "dotenv": "^16.0.3",
+    "hardhat": "^2.14.0"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-waffle": "^2.0.5",
+    "@openzeppelin/hardhat-upgrades": "^1.23.1"
+  }
+}
