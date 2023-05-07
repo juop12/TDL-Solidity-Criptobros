@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import backgroundImage from './images/bathroom brothers.jpeg';
 
 function App() {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -13,12 +14,8 @@ function App() {
     const newBars = [...bars];
     newBars[index] = value;
     setBars(newBars);
-  };
-
-  const handleBarBlur = (index) => {
-    const lastBarIndex = bars.length - 1;
-    if (index === lastBarIndex && bars[lastBarIndex].length > 0 && lastBarIndex < 5) {
-      setBars([...bars, '']);
+    if (index === newBars.length - 1 && value.length > 0 && newBars.length < 6) {
+      setBars([...newBars, '']);
     }
   };
 
@@ -30,6 +27,9 @@ function App() {
         justifyContent: 'center',
         alignItems: 'flex-start',
         padding: '20px',
+        backgroundImage: `url(${backgroundImage})`,
+        backgroundPosition: 'center',
+        backgroundSize: 'cover',
       }}
     >
       <div style={{ marginRight: '20px' }}>
@@ -59,8 +59,7 @@ function App() {
             <input
               value={bar}
               onChange={(event) => handleBarChange(index, event.target.value)}
-              onBlur={() => handleBarBlur(index)}
-              disabled={index === 5 && bars[5].length > 0}
+              maxLength={index === bars.length - 1 ? 10 : undefined} // Set the maximum length to 10 for the last input field
             />
           </div>
         ))}
