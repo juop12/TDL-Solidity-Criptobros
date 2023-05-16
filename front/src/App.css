@@ -1,0 +1,65 @@
+.App {
+    display: flex;
+    flex-direction: column; /* Change the flex-direction to column */
+    align-items: center; /* Center horizontally */
+    padding: 20px;
+    background-image: url('./images/bathroom brothers.jpeg');
+    background-position: center;
+    background-size: cover;
+    min-height: 100vh; /* Set the minimum height of the App to 100% of the viewport height */
+  }
+  
+  .title {
+    margin-bottom: 20px;
+    text-align: center; /* Center the text horizontally */
+    position: absolute; /* Position the title absolutely */
+    top: 20px; /* Set the top position */
+    left: 50%; /* Move the title to the horizontal center */
+    transform: translateX(-50%); /* Adjust horizontally to center */
+  }
+  
+  .content {
+    display: flex;
+    flex-direction: column; /* Change the flex-direction to column */
+    align-items: center; /* Center horizontally */
+    margin-right: 20px; /* Margin right for the content */
+  }
+  
+  .image-container {
+    width: 300px;
+    height: 200px;
+    border: 1px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 120px; /* Adjust the margin-top to your desired spacing */
+    margin-bottom: 20px; /* Add bottom margin to create space between image container and bars */
+  }
+  
+  .selected-image {
+    max-width: 100%;
+    max-height: 100%; /* Maximum width and height for the selected image */
+  }
+  
+  .file-input {
+    margin-bottom: 10px; /* Margin bottom for the file input */
+  }
+  
+  .input-container {
+    margin-left: 20px; /* Margin left for the input container */
+    text-align: center; /* Center the input container text */
+  }
+  
+  .input-row {
+    margin-bottom: 10px; /* Margin bottom for the input rows */
+    width: 100%; /* Set the width of the input rows to 100% */
+  }
+  
+  .input-label {
+    display: block; /* Display the input label as a block element */
+    text-align: left; /* Align the input label text to the left */
+  }
+  
+  .input-field {
+    width: 100%; /* Set the width of the input fields to 100% */
+  }
