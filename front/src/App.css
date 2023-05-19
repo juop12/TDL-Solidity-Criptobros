@@ -1,65 +1,118 @@
 .App {
-    display: flex;
-    flex-direction: column; /* Change the flex-direction to column */
-    align-items: center; /* Center horizontally */
-    padding: 20px;
-    background-image: url('./images/bathroom brothers.jpeg');
-    background-position: center;
-    background-size: cover;
-    min-height: 100vh; /* Set the minimum height of the App to 100% of the viewport height */
-  }
-  
-  .title {
-    margin-bottom: 20px;
-    text-align: center; /* Center the text horizontally */
-    position: absolute; /* Position the title absolutely */
-    top: 20px; /* Set the top position */
-    left: 50%; /* Move the title to the horizontal center */
-    transform: translateX(-50%); /* Adjust horizontally to center */
-  }
-  
-  .content {
-    display: flex;
-    flex-direction: column; /* Change the flex-direction to column */
-    align-items: center; /* Center horizontally */
-    margin-right: 20px; /* Margin right for the content */
-  }
-  
-  .image-container {
-    width: 300px;
-    height: 200px;
-    border: 1px solid #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 120px; /* Adjust the margin-top to your desired spacing */
-    margin-bottom: 20px; /* Add bottom margin to create space between image container and bars */
-  }
-  
-  .selected-image {
-    max-width: 100%;
-    max-height: 100%; /* Maximum width and height for the selected image */
-  }
-  
-  .file-input {
-    margin-bottom: 10px; /* Margin bottom for the file input */
-  }
-  
-  .input-container {
-    margin-left: 20px; /* Margin left for the input container */
-    text-align: center; /* Center the input container text */
-  }
-  
-  .input-row {
-    margin-bottom: 10px; /* Margin bottom for the input rows */
-    width: 100%; /* Set the width of the input rows to 100% */
-  }
-  
-  .input-label {
-    display: block; /* Display the input label as a block element */
-    text-align: left; /* Align the input label text to the left */
-  }
-  
-  .input-field {
-    width: 100%; /* Set the width of the input fields to 100% */
-  }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-image: url('./images/bathroom brothers.jpeg');
+  background-position: center;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+.title {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.image-container {
+  width: 300px;
+  height: 200px;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 120px;
+  margin-bottom: 20px;
+}
+
+.selected-image {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.file-input {
+  margin-bottom: 10px;
+}
+
+.input-container {
+  margin-left: 20px;
+  text-align: center;
+}
+
+.input-row {
+  display: flex;
+  /* Use flex layout for input rows */
+  margin-bottom: 10px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.input-label {
+  flex-basis: 150px;
+  /* Set a fixed width for the input label */
+  text-align: left;
+}
+
+.input-field {
+  flex-grow: 1;
+  /* Allow the input field to grow to fill remaining space */
+  width: 200px;
+  /* Set a fixed width for the input field */
+  height: 30px; /* Increase the height to 50px */
+  margin-right: 10px;
+  /* Add some space between input fields */
+}
+
+.button-container {
+  display: flex;
+}
+
+.property-box-container {
+  height: 200px;
+  /* Adjust the height as needed */
+  overflow: auto;
+  margin-top: 20px;
+  padding: 10px;
+  background-color: yellow;
+}
+
+.property-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.property-table {
+  display: table;
+  width: 100%;
+}
+
+.property-row {
+  display: table-row;
+}
+
+.property-header {
+  font-weight: bold;
+}
+
+.property-name,
+.property-value {
+  display: table-cell;
+  padding: 5px;
+  border-bottom: 1px solid #ccc;
+}
+
+.property-name {
+  font-weight: bold;
+}
+
+.property-rows {
+  display: table-row-group;
+}
