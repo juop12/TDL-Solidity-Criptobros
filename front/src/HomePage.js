@@ -8,7 +8,7 @@ function HomePage() {
       <div className="header"></div> {/* Add the header element */}
       <h1 className="animated-header">
         <p>
-          <span>Crypto Bros</span>
+          <span>Solidity</span>
         </p>
       </h1>
       <div className="button-container">
@@ -38,7 +38,7 @@ function HomePage() {
         <div className="content">
           <div>
             <div>
-              <b>Integrantes del grupo:</b>
+              <b>Integrantes del grupo: Lucas Demarchi, Eliana Harriet, Marcos Bat Mentzel, Julian Stiefkens</b>
             </div>
           </div>
         </div>

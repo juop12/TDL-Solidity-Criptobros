@@ -4,6 +4,7 @@ body {
   color: rgba(255, 255, 255, 0.25);
   text-align: center;
   margin: 0;
+  overflow: hidden;
 }
 
 .animated-header {
@@ -30,7 +31,7 @@ body {
   display: block;
   margin: 0 auto;
   text-shadow: 0 0 80px rgba(255, 255, 255, 0.5);
-  background: url(https://i.ibb.co/RDTnNrT/animated-text-fill.png) repeat-y;
+  background: url("./images/animated-text-fill 2.png") repeat-y;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -87,7 +88,7 @@ body {
 }
 
 .home-page .big-button:hover {
-  background-color: #000000;
+  background-color: #7209B7;
   cursor: pointer;
 }
 
