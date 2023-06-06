@@ -49,7 +49,7 @@ function CreateNFT() {
             element={
               <div>
                 <div className="title">
-                  <img src={titleImage} alt="Title" className="title-image" />
+                  <span className="title-text">Create Your NFT</span>
                 </div>
                 <div className="content">
                   <div className="image-container">
@@ -108,11 +108,27 @@ function CreateNFT() {
                     </div>
                   </div>
                 </div>
+                <div className="button-container">
+                  <button class="btn" type="button">
+                      <strong>CREATE YOUR NFT</strong>
+                      <div id="container-stars">
+                        <div id="stars"></div>
+                      </div>
+
+                      <div id="glow">
+                        <div class="circle"></div>
+                        <div class="circle"></div>
+                      </div>
+                    </button>
+                  </div>  
               </div>
             }
           />
         </Routes>
+
+        
       </div>
+      
     </Router>
   );
 }

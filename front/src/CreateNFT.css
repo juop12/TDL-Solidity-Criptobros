@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Anurati&display=swap');
+
 .create-nft {
   display: flex;
   flex-direction: column;
@@ -11,6 +13,18 @@
   text-align: center;
 }
 
+.title-text {
+  font-family: 'Anurati', sans-serif;
+  font-size: 48px;
+  color: #7209b7;
+  text-transform: uppercase;
+  border: 4px solid #8707ff;
+  padding: 12px 24px;
+  background-color: #13151E;
+  border-radius: 12px;
+}
+
+
 .content {
   display: flex;
   flex-direction: column;
@@ -19,19 +33,19 @@
 }
 
 .custom-button {
-  background-color: transparent;
   border: 2px solid white;
   color: white;
   padding: 12px 24px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   margin-top: 20px;
   margin-bottom: 40px; /* Increase the margin-bottom to create more space */
   transition: background-color 0.3s;
   background-color: #13151E;
+  border-radius: 8px;
 }
 
 
@@ -85,9 +99,11 @@
   color: #8707ff;
   border: 2px solid #8707ff;
   border-radius: 10px;
-  padding: 10px 25px;
+  padding: 12px 24px;;
+  font-size: 20px;
   background: #13151E;
   max-width: 190px;
+  margin-left: 10px;
  }
  
  .input:active {
@@ -104,7 +120,8 @@
   overflow: auto;
   margin-top: 20px;
   padding: 10px;
-  background-color: yellow;
+  background-color: #13151E;
+  
 }
 
 .property-container {
@@ -130,7 +147,8 @@
 .property-value {
   display: table-cell;
   padding: 5px;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid #ffffff;
+  color: white;
 }
 
 .property-name {
@@ -149,15 +167,189 @@
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
   margin-top: 10px;
   margin-bottom: 10px; /* Increase the margin-bottom to create more space */
   transition: background-color 0.3s;
   background-color: #13151E;
+  border-radius: 8px;
+  margin-left: 10px;
 }
 
 
 .add-button:hover {
   background-color: #7209b7;
+}
+
+.button-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  width: 23rem;
+  height: 5rem;
+  background-size: 300% 300%;
+  backdrop-filter: blur(1rem);
+  border-radius: 5rem;
+  transition: 0.5s;
+  animation: gradient_301 5s ease infinite;
+  border: double 4px transparent;
+  background-image: linear-gradient(#212121, #212121), linear-gradient(137.48deg, #ffdb3b 10%, #FE53BB 45%, #8F51EA 67%, #0044ff 87%);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  margin-top: 10px;
+  /* Add the following properties */
+  position: relative;
+}
+
+#container-stars {
+  position: absolute;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: 0.5s;
+  backdrop-filter: blur(1rem);
+  border-radius: 5rem;
+}
+
+strong {
+  z-index: 2;
+  font-family: 'Avalors Personal Use';
+  font-size: 12px;
+  letter-spacing: 5px;
+  color: #FFFFFF;
+  text-shadow: 0 0 4px white;
+}
+
+#glow {
+  position: absolute;
+  display: flex;
+  width: 12rem;
+  /* Add the following properties */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.circle {
+  width: 100%;
+  height: 30px;
+  filter: blur(2rem);
+  animation: pulse_3011 4s infinite;
+  z-index: -1;
+}
+
+/* Remove the margin-top property from the .btn:hover selector */
+
+.btn:hover #container-stars {
+  z-index: 1;
+  background-color: #212121;
+}
+
+.btn:hover {
+  transform: scale(1.1);
+}
+
+.btn:active {
+  border: double 4px #FE53BB;
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  animation: none;
+}
+
+.btn:active .circle {
+  background: #FE53BB;
+}
+
+
+#stars {
+  position: relative;
+  background: transparent;
+  width: 200rem;
+  height: 200rem;
+}
+
+#stars::after {
+  content: "";
+  position: absolute;
+  top: -10rem;
+  left: -100rem;
+  width: 100%;
+  height: 100%;
+  animation: animStarRotate 90s linear infinite;
+}
+
+#stars::after {
+  background-image: radial-gradient(#ffffff 1px, transparent 1%);
+  background-size: 50px 50px;
+}
+
+#stars::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 170%;
+  height: 500%;
+  animation: animStar 60s linear infinite;
+}
+
+#stars::before {
+  background-image: radial-gradient(#ffffff 1px, transparent 1%);
+  background-size: 50px 50px;
+  opacity: 0.5;
+}
+
+@keyframes animStar {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-135rem);
+  }
+}
+
+@keyframes animStarRotate {
+  from {
+    transform: rotate(360deg);
+  }
+  to {
+    transform: rotate(0);
+  }
+}
+
+@keyframes gradient_301 {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes pulse_3011 {
+  0% {
+    transform: scale(0.75);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+  }
+  100% {
+    transform: scale(0.75);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+  }
 }
