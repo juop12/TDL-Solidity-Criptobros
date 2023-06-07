@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'; // Import Link
 import './HomePage.css'; // Import the CSS file for the homepage
 
 function HomePage() {
@@ -12,12 +12,18 @@ function HomePage() {
         </p>
       </h1>
       <div className="button-container">
-        <Link to="/your-page-url" className="transition-element" transition-style="in:circle:hesitate">
+        <Link to="/create-nft">
           <button className="big-button">Create your NFT</button>
         </Link>
-        <button className="big-button">Faucet</button>
-        <button className="big-button">Auction</button>
-        <button className="big-button">Information</button>
+        <Link to="/faucet">
+          <button className="big-button">Faucet</button>
+        </Link>
+        <Link to="/auction">
+          <button className="big-button">Auction</button>
+        </Link>
+        <Link to="/information">
+          <button className="big-button">Information</button>
+        </Link>
       </div>
       <div className="footer">
         <div className="bubbles">
