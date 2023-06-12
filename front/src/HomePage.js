@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate   } from 'react-router-dom';
 
 import './HomePage.css';
 
 function HomePage() {
-  const [walletAddress, setWalletAddress] = useState('');
+
+  const navigate = useNavigate();
   const [bubbles, setBubbles] = useState(() =>
     [...Array(128)].map((_, i) => ({
       id: `${i}-${Math.random()}`,
@@ -15,14 +16,6 @@ function HomePage() {
       delay: -1 * (2 + Math.random() * 2),
     }))
   );
-
-  const handleChooseWallet = () => {
-    // Handle choose wallet logic here
-  };
-
-  const handleInputChange = (event) => {
-    setWalletAddress(event.target.value);
-  };
 
   return (
     <div className="home-page home-page-bg">
@@ -45,19 +38,6 @@ function HomePage() {
         <Link to="/information">
           <button className="big-button">Information</button>
         </Link>
-      </div>
-      <div className="input-container">
-        <div className="input-row">
-          <input
-            value={walletAddress}
-            onChange={handleInputChange}
-            className="input-field"
-            placeholder="Wallet Address"
-          />
-          <button onClick={handleChooseWallet} className="choose-button">
-            Choose Wallet
-          </button>
-        </div>
       </div>
       <div className="footer">
         <div className="bubbles">

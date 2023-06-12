@@ -1,5 +1,8 @@
 import React, { useState, useRef } from 'react';
 import './CreateNFT.css'; // Import the CSS file
+import { useLocation, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { ethers } from 'ethers';
 
 
 function CreateNFT() {
@@ -7,7 +10,9 @@ function CreateNFT() {
   const [properties, setProperties] = useState([]);
   const [propertyName, setPropertyName] = useState('');
   const [propertyValue, setPropertyValue] = useState('');
+  const [address, setAddress] = useState('');
   const fileInputRef = useRef(null);
+
 
   const handleSelectFile = () => {
     fileInputRef.current.click();
@@ -20,7 +25,8 @@ function CreateNFT() {
 
   const handleAddProperty = () => {
     if (propertyName && propertyValue) {
-      setProperties([...properties, { name: propertyName, value: propertyValue }]);
+      const newProperty = { name: propertyName, value: propertyValue };
+      setProperties([...properties, newProperty]);
       setPropertyName('');
       setPropertyValue('');
     }
@@ -30,8 +36,71 @@ function CreateNFT() {
     handleSelectFile();
   };
 
+  const mintNFT = async (address, pinataHash) => {
+    try {
+      const response = await axios.post('https://api.defender.openzeppelin.com/autotasks/9464a6c0-a076-4cb7-be81-6698c16db878/runs/webhook/16764d23-28d5-46ba-a418-c064f2089339/HUo8kVHcTGfK8qwijGqkkW', {
+        addressTo: address,
+        uri: pinataHash,
+      });
+  
+      console.log('NFT Minted successfully:', response.data);
+    } catch (error) {
+      console.error('Error minting NFT:', error);
+    }
+  };
+
+  const handleCreateNFT = async (selectedImage, properties, address) => {
+    // Access the form data and execute your code here
+    console.log('Selected Image:', selectedImage);
+    console.log('Properties:', properties);
+    console.log('Address:', address);
+
+
+    // Upload image to IPFS
+    const formData = new FormData();
+    formData.append('file', selectedImage);
+
+    try {
+      const ipfsResponse = await axios.post('https://api.pinata.cloud/pinning/pinFileToIPFS', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          pinata_api_key: '40c94835d8413087e499',
+          pinata_secret_api_key: 'a529f470ddeb55ae816c13433cc1de6a88bf09acba77ce59153114131e50a064',
+        },
+      });
+
+      const ipfsHash = ipfsResponse.data.IpfsHash;
+      console.log('IPFS Hash:', ipfsHash);
+
+      // Create NFT on Pinata
+      const nftData = {
+        image: `ipfs://${ipfsHash}`,
+        name: 'CryptoBros',
+        description: 'CryptoBros',
+        ...properties,
+      };
+
+      const pinataResponse = await axios.post('https://api.pinata.cloud/pinning/pinJSONToIPFS', nftData, {
+        headers: {
+          pinata_api_key: '40c94835d8413087e499',
+          pinata_secret_api_key: 'a529f470ddeb55ae816c13433cc1de6a88bf09acba77ce59153114131e50a064',
+        },
+      });
+
+      const pinataHash = pinataResponse.data.IpfsHash;
+      console.log('Pinata Hash:', `ipfs://${pinataHash}`);
+      mintNFT(address, `ipfs://${pinataHash}`);
+      // Reset form fields and clear selected image and properties
+    } catch (error) {
+      console.error('Error creating NFT:', error);
+    }
+  };
+
+  const handleAddressChange = (event) => {
+    setAddress(event.target.value);
+  };
+
   return (
-    
     <div
       className="create-nft"
       style={{
@@ -99,16 +168,23 @@ function CreateNFT() {
           </div>
         </div>
       </div>
+      <div className="address-container"> {/* Add a container for the address input field */}
+        <input
+          value={address}
+          onChange={handleAddressChange}
+          className="address-field"
+          placeholder="Wallet Address"
+        />
+      </div>
       <div className="button-container">
-        <button class="btn" type="button">
+        <button onClick={() => handleCreateNFT(selectedImage, properties, address)} className="btn" type="button">
           <strong>CREATE YOUR NFT</strong>
           <div id="container-stars">
             <div id="stars"></div>
           </div>
-
           <div id="glow">
-            <div class="circle"></div>
-            <div class="circle"></div>
+            <div className="circle"></div>
+            <div className="circle"></div>
           </div>
         </button>
       </div>

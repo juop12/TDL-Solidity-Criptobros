@@ -57,7 +57,7 @@ contract Auction is ERC1155Holder {
         startTime = block.timestamp;
         endTime = _endTime;
 
-        maxBidders = _creator;
+        maxBidder = _creator;
 
         smartContract = _smartContract;
     }
