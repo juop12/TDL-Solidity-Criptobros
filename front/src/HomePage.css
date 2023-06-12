@@ -92,6 +92,29 @@ body {
   cursor: pointer;
 }
 
+.choose-button{
+  background-color: transparent;
+  border: 2px solid white;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 10px; /* Increase the margin-bottom to create more space */
+  transition: background-color 0.3s;
+  background-color: #13151E;
+  border-radius: 8px;
+  margin-left: 10px;
+}
+
+
+.choose-button:hover {
+  background-color: #7209b7;
+}
+
 .footer {
   z-index: 1;
   --footer-background: #7209B7;

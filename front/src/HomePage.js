@@ -1,11 +1,32 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link
-import './HomePage.css'; // Import the CSS file for the homepage
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+
+import './HomePage.css';
 
 function HomePage() {
+  const [walletAddress, setWalletAddress] = useState('');
+  const [bubbles, setBubbles] = useState(() =>
+    [...Array(128)].map((_, i) => ({
+      id: `${i}-${Math.random()}`,
+      size: 2 + Math.random() * 4,
+      distance: 6 + Math.random() * 4,
+      position: -5 + Math.random() * 110,
+      time: 2 + Math.random() * 2,
+      delay: -1 * (2 + Math.random() * 2),
+    }))
+  );
+
+  const handleChooseWallet = () => {
+    // Handle choose wallet logic here
+  };
+
+  const handleInputChange = (event) => {
+    setWalletAddress(event.target.value);
+  };
+
   return (
     <div className="home-page home-page-bg">
-      <div className="header"></div> {/* Add the header element */}
+      <div className="header"></div>
       <h1 className="animated-header">
         <p>
           <span>Solidity</span>
@@ -25,18 +46,31 @@ function HomePage() {
           <button className="big-button">Information</button>
         </Link>
       </div>
+      <div className="input-container">
+        <div className="input-row">
+          <input
+            value={walletAddress}
+            onChange={handleInputChange}
+            className="input-field"
+            placeholder="Wallet Address"
+          />
+          <button onClick={handleChooseWallet} className="choose-button">
+            Choose Wallet
+          </button>
+        </div>
+      </div>
       <div className="footer">
         <div className="bubbles">
-          {[...Array(128)].map((_, i) => (
+          {bubbles.map((bubble) => (
             <div
-              key={i}
+              key={bubble.id}
               className="bubble"
               style={{
-                '--size': `${2 + Math.random() * 4}rem`,
-                '--distance': `${6 + Math.random() * 4}rem`,
-                '--position': `${-5 + Math.random() * 110}%`,
-                '--time': `${2 + Math.random() * 2}s`,
-                '--delay': `-${1 * (2 + Math.random() * 2)}s`,
+                '--size': `${bubble.size}rem`,
+                '--distance': `${bubble.distance}rem`,
+                '--position': `${bubble.position}%`,
+                '--time': `${bubble.time}s`,
+                '--delay': `${bubble.delay}s`,
               }}
             ></div>
           ))}
