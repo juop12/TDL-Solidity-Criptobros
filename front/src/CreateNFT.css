@@ -120,9 +120,6 @@
   box-shadow: 2px 2px 15px #8707ff inset;
  }
 
-.button-container {
-  display: flex;
-}
 
 .property-box-container {
   height: 200px;
@@ -154,7 +151,8 @@
 }
 
 .property-name,
-.property-value {
+.property-value,
+.property-delete {
   display: table-cell;
   padding: 5px;
   border-bottom: 1px solid #ffffff;
@@ -169,7 +167,8 @@
   display: table-row-group;
 }
 
-.add-button{
+.add-button,
+.delete-button{
   background-color: transparent;
   border: 2px solid white;
   color: white;

@@ -32,6 +32,10 @@ function CreateNFT() {
     }
   };
 
+  const handleDeleteProperty = () => {
+    setProperties([]);
+  }
+
   const handleButtonClick = () => {
     handleSelectFile();
   };
@@ -149,6 +153,9 @@ function CreateNFT() {
           />
           <button onClick={handleAddProperty} className="add-button">
             Add Property
+          </button>
+          <button onClick={handleDeleteProperty} className="delete-button">
+            Delete All Properties
           </button>
         </div>
         <div className="property-box-container">
