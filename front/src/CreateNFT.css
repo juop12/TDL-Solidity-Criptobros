@@ -167,6 +167,41 @@
   display: table-row-group;
 }
 
+.loading-box,
+.response-box {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+  z-index: 9999; /* Higher z-index to ensure it appears on top */
+  color: #ffffff; /* Text color */
+  font-size: 24px; /* Font size */
+}
+
+.response-box {
+  background-color: rgba(0, 0, 0, 0.8); /* Darker background for response box */
+  padding: 24px; /* Padding for response box */
+}
+
+.loading-box span,
+.response-box span {
+  text-align: center;
+}
+
+.loading-box span {
+  font-weight: bold;
+}
+
+.response-box span {
+  white-space: pre-line; /* Preserve line breaks in the response text */
+}
+
+
 .add-button,
 .delete-button{
   background-color: transparent;
@@ -256,6 +291,7 @@ strong {
   animation: pulse_3011 4s infinite;
   z-index: -1;
 }
+
 
 /* Remove the margin-top property from the .btn:hover selector */
 

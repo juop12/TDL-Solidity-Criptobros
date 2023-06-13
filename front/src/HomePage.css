@@ -5,6 +5,7 @@ body {
   text-align: center;
   margin: 0;
   overflow: hidden;
+  zoom: 0.72;
 }
 
 .animated-header {

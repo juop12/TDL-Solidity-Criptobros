@@ -11,6 +11,9 @@ function CreateNFT() {
   const [propertyName, setPropertyName] = useState('');
   const [propertyValue, setPropertyValue] = useState('');
   const [address, setAddress] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState(null);
+
   const fileInputRef = useRef(null);
 
 
@@ -46,7 +49,7 @@ function CreateNFT() {
         addressTo: address,
         uri: pinataHash,
       });
-  
+
       console.log('NFT Minted successfully:', response.data);
     } catch (error) {
       console.error('Error minting NFT:', error);
@@ -58,7 +61,8 @@ function CreateNFT() {
     console.log('Selected Image:', selectedImage);
     console.log('Properties:', properties);
     console.log('Address:', address);
-
+    setLoading(true);
+    setResponse(false);
 
     // Upload image to IPFS
     const formData = new FormData();
@@ -81,8 +85,12 @@ function CreateNFT() {
         image: `ipfs://${ipfsHash}`,
         name: 'CryptoBros',
         description: 'CryptoBros',
-        ...properties,
+        attributes: properties.reduce((acc, property) => {
+          acc[property.name] = property.value;
+          return acc;
+        }, {}),
       };
+      
 
       const pinataResponse = await axios.post('https://api.pinata.cloud/pinning/pinJSONToIPFS', nftData, {
         headers: {
@@ -93,7 +101,14 @@ function CreateNFT() {
 
       const pinataHash = pinataResponse.data.IpfsHash;
       console.log('Pinata Hash:', `ipfs://${pinataHash}`);
-      mintNFT(address, `ipfs://${pinataHash}`);
+      await mintNFT(address, `ipfs://${pinataHash}`);
+      setLoading(false);
+      setResponse(true);
+      setSelectedImage(null);
+      setProperties([]);
+      setPropertyName('');
+      setPropertyValue('');
+      setAddress('');
       // Reset form fields and clear selected image and properties
     } catch (error) {
       console.error('Error creating NFT:', error);
@@ -184,7 +199,11 @@ function CreateNFT() {
         />
       </div>
       <div className="button-container">
-        <button onClick={() => handleCreateNFT(selectedImage, properties, address)} className="btn" type="button">
+        <button
+          onClick={() => handleCreateNFT(selectedImage, properties, address)}
+          className="btn"
+          type="button"
+        >
           <strong>CREATE YOUR NFT</strong>
           <div id="container-stars">
             <div id="stars"></div>
@@ -195,6 +214,17 @@ function CreateNFT() {
           </div>
         </button>
       </div>
+      {loading && (
+        <div className="loading-box">
+          <span>Loading...</span>
+        </div>
+      )}
+      {loading && (
+        <div className="loading-box">
+          <span>Loading...</span>
+        </div>
+      )}
+      {response && <p className="minted-comment">MINTED</p>}
     </div>
   );
 }
