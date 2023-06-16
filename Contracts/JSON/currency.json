@@ -1,8 +1,11 @@
 {
-    "name": "TDLFerringo",
+    "name": "TDLFerrigno",
     "description": "TDL currency",
+    "image": "https://ipfs.io/ipfs/QmWQND83mNvNaAKC8K5b5TswzFJp42weBBicKLzv7F1kNV",
     "attributes": {
-      "mission": "TDL Promote"
+      "mission": "TDL Promote",
+      "flavour": "Happy chocolate",
+      "amount of chips": "Infinite"
     }
   }
   
