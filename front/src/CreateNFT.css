@@ -5,6 +5,7 @@
   align-items: center;
   padding: 20px;
   min-height: 100vh;
+  zoom: 0.96;
 }
 
 .title {

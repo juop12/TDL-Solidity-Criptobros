@@ -65,7 +65,7 @@ function Faucet() {
 				<input
 					value={address}
 					onChange={handleAddressChange}
-					className="address-field"
+					className="address-field-faucet"
 					placeholder="Wallet Address"
 				/>
 			</div>
