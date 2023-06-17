@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
-import './CreateNFT.css'; // Import the CSS file
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useRef } from 'react';
 import { ethers } from 'ethers';
+import axios from 'axios';
+import './CreateNFT.css'; // Import the CSS file
 
 
 function CreateNFT() {
@@ -91,7 +91,6 @@ function CreateNFT() {
         }, {}),
       };
       
-
       const pinataResponse = await axios.post('https://api.pinata.cloud/pinning/pinJSONToIPFS', nftData, {
         headers: {
           pinata_api_key: '40c94835d8413087e499',
@@ -101,7 +100,10 @@ function CreateNFT() {
 
       const pinataHash = pinataResponse.data.IpfsHash;
       console.log('Pinata Hash:', `ipfs://${pinataHash}`);
+
       await mintNFT(address, `ipfs://${pinataHash}`);
+
+      // Reset form fields and clear selected image and properties
       setLoading(false);
       setResponse(true);
       setSelectedImage(null);
@@ -109,7 +111,7 @@ function CreateNFT() {
       setPropertyName('');
       setPropertyValue('');
       setAddress('');
-      // Reset form fields and clear selected image and properties
+
     } catch (error) {
       console.error('Error creating NFT:', error);
     }
@@ -125,7 +127,7 @@ function CreateNFT() {
       style={{
         background:
           'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 400\'%3E%3Cdefs%3E%3Cpattern id=\'bg_pattern\' width=\'100\' height=\'100\' patternUnits=\'userSpaceOnUse\'%3E%3Crect x=\'0\' y=\'0\' width=\'50\' height=\'25\' fill=\'%2315161A\'/%3E%3Crect x=\'0\' y=\'25\' width=\'25\' height=\'75\' fill=\'%2315161A\'/%3E%3Crect x=\'50\' y=\'75\' width=\'50\' height=\'25\' fill=\'%2315161A\'/%3E%3Crect x=\'50\' y=\'0\' width=\'25\' height=\'75\' fill=\'%2315161A\'/%3E%3C/pattern%3E%3C/defs%3E%3Crect x=\'0\' y=\'0\' width=\'100%25\' height=\'100%25\' fill=\'%23112455\'/%3E%3Crect x=\'0\' y=\'0\' width=\'100%25\' height=\'100%25\' fill=\'url(%23bg_pattern)\'/%3E%3C/svg%3E") center/cover',
-      }}
+        }}
     >
       <div className="title">
         <span className="title-text">Create Your NFT</span>
