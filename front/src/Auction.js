@@ -3,6 +3,9 @@ import './Auction.css';
 import axios from 'axios';
 
 function Auction() {
+  const [address, setAddress] = useState('');
+  const [table, showTable] = useState(false);
+  const [auction, showAuction] = useState(false);
   const [tokens, setTokens] = useState([]);
 
   useEffect(() => {
@@ -30,24 +33,81 @@ function Auction() {
     fetchTokens();
   }, []);
 
+  const handleButtonClick = () => {
+    showTable(false);
+    showAuction(true);
+  }
+
+  const handleAddressChange = (event) => {
+    showAuction(false);
+
+    setAddress(event.target.value);
+    showTable(true);
+  };
+
   return (
     <div className="auction-page">
-      <h1>Tokens owned by the address:</h1>
-      {tokens.length === 0 ? (
-        <p>Loading tokens...</p>
-      ) : (
-        <ul>
-          {tokens.map((token) => (
-            <li key={token.token_id}>
-              <p>Token ID: {token.token_id}</p>
-              <p>Name: {token.name}</p>
-              <p>Contract Address: {token.asset_contract.address}</p>
-              <p>Token Type: {token.asset_contract.schema_name}</p>
-              <img src={token.image_url} alt={token.name} />
-            </li>
-          ))}
-        </ul>
+
+      <div className="button-container">
+        <button 
+          onClick={handleButtonClick}
+          className="big-button"
+        >
+          Auctions still opened
+        </button>
+
+        <div styles="text-align:center">
+          <input
+            value={address}
+            onChange={handleAddressChange}
+            className="address-field-faucet"
+            placeholder="Wallet Address"
+          />
+        </div>
+      </div>
+
+      {auction && !table && (
+        <div className="nft-table">
+          <h1>Tokens owned by the address:</h1>
+          {tokens.length === 0 ? (
+            <p>Loading tokens...</p>
+          ) : (
+            <ul>
+              {tokens.map((token) => (
+                <li key={token.token_id}>
+                  <p>Token ID: {token.token_id}</p>
+                  <p>Name: {token.name}</p>
+                  <p>Contract Address: {token.asset_contract.address}</p>
+                  <p>Token Type: {token.asset_contract.schema_name}</p>
+                  <img src={token.image_url} alt={token.name} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
       )}
+
+      {table && !auction && (
+        <div className="nft-table">
+          <h1>Tokens owned by the address:</h1>
+          {tokens.length === 0 ? (
+            <p>Loading tokens...</p>
+          ) : (
+            <ul>
+              {tokens.map((token) => (
+                <li key={token.token_id}>
+                  <p>Token ID: {token.token_id}</p>
+                  <p>Name: {token.name}</p>
+                  <p>Contract Address: {token.asset_contract.address}</p>
+                  <p>Token Type: {token.asset_contract.schema_name}</p>
+                  <img src={token.image_url} alt={token.name} />
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
     </div>
   );
 }
