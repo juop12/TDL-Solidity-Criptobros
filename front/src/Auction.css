@@ -7,7 +7,31 @@ body {
     overflow: hidden;
     zoom: 0.72;
   }
+
+  .token-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 20px;
+  }
   
+  .card {
+    background-color: #000000;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .card img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  
+  .quantity {
+    margin-top: 5px;
+    font-weight: bold;
+  }
+
   .animated-header {
     position: absolute;
     top: 18%;

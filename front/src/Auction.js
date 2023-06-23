@@ -1,62 +1,60 @@
 import React, { useEffect, useState } from 'react';
 import './Auction.css';
-import axios from 'axios';
+import Moralis from 'moralis';
 
 function Auction() {
   const [address, setAddress] = useState('');
   const [table, showTable] = useState(false);
   const [auction, showAuction] = useState(false);
   const [tokens, setTokens] = useState([]);
+  const [responseString, setResponseString] = useState('');
 
   useEffect(() => {
     const fetchTokens = async () => {
       try {
-        const address = '0x123456789ABCDEF'; // Remplazar con address
-        const network = 'matic'; // Mumbai
-        const apiKey = 'YOUR_API_KEY'; // Reemplazar con API KEY
+        await Moralis.start({
+          apiKey: "uwKAFyNPx5zT7CQHZ9J28sfP3k2dpl25CJNEBwaU4gv7LKCNI3d3Pb9LPDdmWr5t" // Replace with your Moralis API Key
+        });
 
-        const response = await axios.get(
-          `https://api.opensea.io/api/v1/assets?owner=${address}&network=${network}`,
-          {
-            headers: {
-              'X-API-KEY': apiKey,
-            },
-          }
-        );
+        const response = await Moralis.EvmApi.nft.getWalletNFTs({
+          chain: "0x13881", // Mumbai Testnet
+          format: "decimal",
+          mediaItems: true,
+          address: address
+        });
 
-        setTokens(response.data.assets);
+        setTokens(response.result);
+        setResponseString(JSON.stringify(response, null, 2));
       } catch (error) {
         console.error('Error fetching tokens:', error);
+        setTokens([]);
+        setResponseString(`Error fetching tokens: ${error.message}`);
       }
     };
 
-    fetchTokens();
-  }, []);
+    if (address) {
+      fetchTokens();
+    }
+  }, [address]);
 
   const handleButtonClick = () => {
     showTable(false);
     showAuction(true);
-  }
+  };
 
   const handleAddressChange = (event) => {
     showAuction(false);
-
     setAddress(event.target.value);
     showTable(true);
   };
 
   return (
     <div className="auction-page">
-
       <div className="button-container">
-        <button 
-          onClick={handleButtonClick}
-          className="big-button"
-        >
+        <button onClick={handleButtonClick} className="big-button">
           Auctions still opened
         </button>
-
-        <div styles="text-align:center">
+        <div style={{ textAlign: "center" }}>
           <input
             value={address}
             onChange={handleAddressChange}
@@ -70,19 +68,24 @@ function Auction() {
         <div className="nft-table">
           <h1>Tokens owned by the address:</h1>
           {tokens.length === 0 ? (
-            <p>Loading tokens...</p>
+            <p>No tokens found for the given address.</p>
           ) : (
-            <ul>
+            <div className="token-grid">
               {tokens.map((token) => (
-                <li key={token.token_id}>
-                  <p>Token ID: {token.token_id}</p>
-                  <p>Name: {token.name}</p>
-                  <p>Contract Address: {token.asset_contract.address}</p>
-                  <p>Token Type: {token.asset_contract.schema_name}</p>
-                  <img src={token.image_url} alt={token.name} />
-                </li>
+                <div key={`${token.token_id}-${token.contract_address}`} className="card">
+                  {token.metadata && token.metadata.image ? (
+                    <>
+                      <img src={token.metadata.image} alt={token.name} />
+                      {token.quantity > 1 && (
+                        <p className="quantity">{token.quantity}</p>
+                      )}
+                    </>
+                  ) : (
+                    <p>No image available</p>
+                  )}
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </div>
       )}
@@ -91,23 +94,43 @@ function Auction() {
         <div className="nft-table">
           <h1>Tokens owned by the address:</h1>
           {tokens.length === 0 ? (
-            <p>Loading tokens...</p>
+            <p>No tokens found for the given address.</p>
           ) : (
-            <ul>
+            <div className="token-grid">
               {tokens.map((token) => (
-                <li key={token.token_id}>
-                  <p>Token ID: {token.token_id}</p>
-                  <p>Name: {token.name}</p>
-                  <p>Contract Address: {token.asset_contract.address}</p>
-                  <p>Token Type: {token.asset_contract.schema_name}</p>
-                  <img src={token.image_url} alt={token.name} />
-                </li>
+                <div key={`${token.token_id}-${token.contract_address}`} className="card">
+                  {token.metadata && token.metadata.image ? (
+                    <div>
+                      <img
+                        src={token.metadata.image}
+                        alt={token.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/no-image-available.png'; // Replace with the path to your "no image available" placeholder image
+                        }}
+                      />
+                      {token.quantity > 1 && (
+                        <p className="quantity">{token.quantity}</p>
+                      )}
+                      <p className="image-url">{token.metadata.image}</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <p>No image available</p>
+                      <p className="image-url">{token.metadata ? token.metadata.image : 'Image URL not found'}</p>
+                    </div>
+                  )}
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </div>
       )}
 
+      <div className="response-container">
+        <h2>Response:</h2>
+        <pre>{responseString}</pre>
+      </div>
     </div>
   );
 }
