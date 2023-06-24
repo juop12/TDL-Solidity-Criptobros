@@ -13,8 +13,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/create-nft" element={<CreateNFT />} />
         <Route path="/faucet" element={<Faucet />} /> 
-        <Route path="/auction" element={<Auction />} /> 
-        <Route path="/information" element={<Information />} /> 
+        <Route path="/auction" element={<Auction />} />
       </Routes>
     </Router>
   );

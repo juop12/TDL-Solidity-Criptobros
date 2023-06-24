@@ -35,7 +35,7 @@ function HomePage() {
         <Link to="/auction">
           <button className="big-button">Auction</button>
         </Link>
-        <Link to="/information">
+        <Link to="https://eli-tocs.notion.site/eli-tocs/Criptobros-ae4670bdd81a4d5091a8b735110d222f" target='_blank'>
           <button className="big-button">Information</button>
         </Link>
       </div>
