@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './Auction.css';
 import Moralis from 'moralis';
-
 import console from './lib/console-browserify';
+import { Link } from 'react-router-dom';
 
 function Auction() {
   const [address, setAddress] = useState('');
@@ -125,6 +125,11 @@ function Auction() {
         <h2>Response:</h2>
         <pre>{responseString}</pre>
       </div> */}
+      <div className="button-container">
+        <Link to="..">
+          <button className="custom-button">Back</button>
+        </Link>
+      </div>
     </div>
   );
 }

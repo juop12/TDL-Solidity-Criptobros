@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import './CreateNFT.css'; // Import the CSS file
+import { Link } from 'react-router-dom';
 import console from './lib/console-browserify';
 
 
@@ -216,6 +217,11 @@ function CreateNFT() {
             <div className="circle"></div>
           </div>
         </button>
+      </div>
+      <div className="button-container">
+        <Link to="..">
+          <button className="custom-button">Back</button>
+        </Link>
       </div>
       {loading && (
         <div className="loading-box">

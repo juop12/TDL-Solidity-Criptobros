@@ -4,6 +4,7 @@ import { ethers } from 'ethers';
 import axios from 'axios';
 import './Faucet.css'; // Import the CSS file
 import console from './lib/console-browserify';
+import { Link } from 'react-router-dom';
 
 
 function Faucet() {
@@ -80,6 +81,12 @@ function Faucet() {
 				<strong>ASK FOR CURRENCY</strong>
 			</button>
 		</div>
+
+		<div className="button-container">
+			<Link to="..">
+          		<button className="custom-button">Back</button>
+        	</Link>
+      	</div>
 
 		{loading && (
 			<div className="loading-box">
