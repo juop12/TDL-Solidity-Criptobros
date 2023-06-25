@@ -114,7 +114,7 @@ function Auction() {
                       {token.quantity > 1 && (
                         <p className="quantity">{token.quantity}</p>
                       )}
-                      <p className="image-url">{token.metadata.image}</p>
+                      {/* <p className="image-url">{token.metadata.image}</p> */}
                     </div>
                   ) : (
                     <div>
@@ -129,10 +129,10 @@ function Auction() {
         </div>
       )}
 
-      <div className="response-container">
+      {/* <div className="response-container">
         <h2>Response:</h2>
         <pre>{responseString}</pre>
-      </div>
+      </div> */}
     </div>
   );
 }
