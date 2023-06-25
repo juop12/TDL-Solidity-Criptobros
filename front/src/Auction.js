@@ -14,10 +14,6 @@ function Auction() {
   useEffect(() => {
     const fetchTokens = async () => {
       try {
-        await Moralis.start({
-          apiKey: "uwKAFyNPx5zT7CQHZ9J28sfP3k2dpl25CJNEBwaU4gv7LKCNI3d3Pb9LPDdmWr5t" // Replace with your Moralis API Key
-        });
-
         const response = await Moralis.EvmApi.nft.getWalletNFTs({
           chain: "0x13881", // Mumbai Testnet
           format: "decimal",
@@ -104,11 +100,11 @@ function Auction() {
                   {token.metadata && token.metadata.image ? (
                     <div>
                       <img
-                        src={token.metadata.image}
+                        src={"https://ipfs.io/ipfs/" + token.metadata.image.slice(7)}
                         alt={token.name}
                         onError={(e) => {
                           e.target.onerror = null;
-                          e.target.src = '/no-image-available.png'; // Replace with the path to your "no image available" placeholder image
+                          e.target.src = 'images/no-image-available.jpg'; // Replace with the path to your "no image available" placeholder image
                         }}
                       />
                       {token.quantity > 1 && (
@@ -136,5 +132,11 @@ function Auction() {
     </div>
   );
 }
+const startMoralis = async () => {
+  await Moralis.start({
+    apiKey: "uwKAFyNPx5zT7CQHZ9J28sfP3k2dpl25CJNEBwaU4gv7LKCNI3d3Pb9LPDdmWr5t" // Replace with your Moralis API Key
+  });
+}
 
+startMoralis()
 export default Auction;
