@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import './CreateNFT.css'; // Import the CSS file
+import console from './lib/console-browserify';
 
 
 function CreateNFT() {

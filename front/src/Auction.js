@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './Auction.css';
 import Moralis from 'moralis';
 
+import console from './lib/console-browserify';
+
 function Auction() {
   const [address, setAddress] = useState('');
   const [table, showTable] = useState(false);

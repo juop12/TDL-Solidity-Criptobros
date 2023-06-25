@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import './Faucet.css'; // Import the CSS file
+import console from './lib/console-browserify';
 
 
 function Faucet() {
