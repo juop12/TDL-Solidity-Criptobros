@@ -73,10 +73,8 @@ function Auction() {
                 <div key={`${token.token_id}-${token.contract_address}`} className="card">
                   {token.metadata && token.metadata.image ? (
                     <>
-                      <img src={token.metadata.image} alt={token.name} />
-                      {token.quantity > 1 && (
-                        <p className="quantity">{token.quantity}</p>
-                      )}
+                      <img src={"https://ipfs.io/ipfs/" + token.metadata.image.slice(7)} alt={token.name} />
+                      <p className="amount">Amount: {token.amount}</p>
                     </>
                   ) : (
                     <p>No image available</p>
@@ -107,9 +105,7 @@ function Auction() {
                           e.target.src = 'images/no-image-available.jpg'; // Replace with the path to your "no image available" placeholder image
                         }}
                       />
-                      {token.quantity > 1 && (
-                        <p className="quantity">{token.quantity}</p>
-                      )}
+                        <p className="amount">Amount: {token.amount}</p>
                       {/* <p className="image-url">{token.metadata.image}</p> */}
                     </div>
                   ) : (
