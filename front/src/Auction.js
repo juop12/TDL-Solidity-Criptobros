@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './Auction.css';
 import Moralis from 'moralis';
 import console from './lib/console-browserify';
-import { Link } from 'react-router-dom';
+import { Link, json } from 'react-router-dom';
 import axios from 'axios';
 
 function Auction() {
@@ -36,23 +36,30 @@ function Auction() {
     }
   }, [address]);
 
+  
   const getUri = async () => {
     try {
       const response = await axios.post('https://api.defender.openzeppelin.com/autotasks/d1c6bf30-0112-43a9-9352-bc978df633ab/runs/webhook/16764d23-28d5-46ba-a418-c064f2089339/LT7R5XRK72KshopDm25Cos');
-      console.log('GetUri successfully:', response.data.result);
+
       let result = JSON.parse(response.data.result);
-      console.log('Get image:', result.body.message);
-      let url = result.body.message;
-      const responseIpfs = await fetch(url);
-      const data = await responseIpfs.text();
-      console.log(data);
-      /*
-      const trimmedString = responseIpfs.url.substring(url.lastIndexOf('/') + 1, url.lastIndexOf('%'));
-      console.log('Get TRIM:', trimmedString);
-      //const trimmedWithoutQuotes = trimmed.replace(/"$/, '');
+      console.log('GetUri successfully:', result);
+
+      let url = JSON.parse(result.body.message);
+      console.log('Get message:', url);
+
+      let responseIpfs = await axios.get(url)
+      
+      const image_url = responseIpfs.data.image;
+      console.log('Image text:', image_url);
+
+      const trimmedString = image_url.split('://')[1];
+      console.log('Image url:', trimmedString);
+
       const concatenatedUrl = "https://ipfs.io/ipfs/" + trimmedString;
       console.log('Get image:', concatenatedUrl);
-      */
+
+      return concatenatedUrl
+
     } catch (error) {
       console.error('Error minting NFT:', error);
     }
