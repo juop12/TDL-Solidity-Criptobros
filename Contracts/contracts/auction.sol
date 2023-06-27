@@ -152,6 +152,39 @@ contract Auction is ERC1155Holder {
         return true;
     }
 
+    //Tiempo Restante
+    function timeRemaining()
+        external
+        open
+        notCreator
+        view
+        returns (uint256)
+    {
+        return endTime-startTime;
+    }
+
+    //Max Bidder
+    function getMaxBidder()
+        external
+        open
+        notCreator
+        view
+        returns (address)
+    {
+        return maxBidder;
+    }
+
+    //Max Bid
+    function getMaxBid()
+        external
+        open
+        notCreator
+        view
+        returns (uint256)
+    {
+        return maxBid;
+    }
+
     // El postor máximo obtiene el token
     function collect() external ended collector notCancelled returns (bool) {
         nft1155.safeTransferFrom(
