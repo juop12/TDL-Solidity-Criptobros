@@ -57,6 +57,10 @@ body {
     max-height: 100%;
   }
 
+  .button-container{
+    margin-top:50px;
+  }
+
   .titleAuction {
     margin-bottom: 20px;
     margin-top: 20px;

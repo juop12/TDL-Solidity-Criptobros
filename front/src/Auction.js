@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import './Auction.css';
 import Moralis from 'moralis';
 import axios from 'axios';
+import console from './lib/console-browserify';
+import { Link } from 'react-router-dom';
 
 function Auction() {
   const [address, setAddress] = useState('');
@@ -93,6 +95,12 @@ function Auction() {
         <button className="big-button">
           Bid
         </button>
+      </div>
+
+      <div className="button-container">
+			  <Link to="..">
+          <button className="custom-button">Back</button>
+        </Link>
       </div>
     </div>
   );
