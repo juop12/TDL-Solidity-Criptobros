@@ -18,7 +18,7 @@ contract Auction is ERC1155Holder {
 
     IERC1155 nft1155; // El token NFT
     uint256 public tokenId; // El id del token
-
+    string private tokenUri; // El uri del token
     uint256 public startTime; // El timestamp del bloque que marca el inicio de la subasta
     uint256 public endTime; // Tiempo de finalización de la subasta (en segundos)
 
@@ -93,7 +93,9 @@ contract Auction is ERC1155Holder {
         uint256 _startPrice,
         uint256 _directBuyPrice,
         uint256 _endTime,
-        address _myTokenAddress
+        address _myTokenAddress,
+        uint256 _tokenId,
+        string memory _uri
     ) {
         creator = _creator;
         directBuyPrice = _directBuyPrice;
@@ -106,6 +108,8 @@ contract Auction is ERC1155Holder {
 
         maxBidder = _creator;
         cancelled = false;
+        tokenId = _tokenId;
+        tokenUri = _uri;
     }
 
 
@@ -127,15 +131,15 @@ contract Auction is ERC1155Holder {
     }
 
     // Crea una nueva puja (usa los modificadores)
-    function placeBid()
+    function placeBid(uint256 bid)
         external
         payable
         open
-        notCreator
+        onlyCreator
         validBid
         returns (bool)
     {
-        if (msg.value >= directBuyPrice) {
+        if (bid >= directBuyPrice) {
             endTime = block.timestamp;
         }
 
@@ -145,18 +149,20 @@ contract Auction is ERC1155Holder {
             return true;
         }
 
-        maxBid = msg.value;
-        maxBidder = msg.sender;
-        bids.push(Bid(msg.sender, msg.value));
-
-        return true;
+        if(bid > maxBid){
+            maxBid = bid;
+            maxBidder = msg.sender;
+            bids.push(Bid(msg.sender, bid));
+            return true;
+        }
+        return false;
     }
 
     //Tiempo Restante
     function timeRemaining()
         external
         open
-        notCreator
+        onlyCreator
         view
         returns (uint256)
     {
@@ -167,7 +173,7 @@ contract Auction is ERC1155Holder {
     function getMaxBidder()
         external
         open
-        notCreator
+        onlyCreator
         view
         returns (address)
     {
@@ -178,11 +184,22 @@ contract Auction is ERC1155Holder {
     function getMaxBid()
         external
         open
-        notCreator
+        onlyCreator
         view
         returns (uint256)
     {
         return maxBid;
+    }
+
+        //Max Bid
+    function getUri()
+        external
+        open
+        onlyCreator
+        view
+        returns (string memory)
+    {
+        return tokenUri;
     }
 
     // El postor máximo obtiene el token
