@@ -5,11 +5,13 @@ import console from './lib/console-browserify';
 import { Link } from 'react-router-dom';
 
 function Auction() {
-  const [address, setAddress] = useState('');
   const [imageURL, setImageURL] = useState('');
   const [maxBid, setMaxBid] = useState('');
-  const [bid, setBid] = useState('');
   const [balance, setBalance] = useState('');
+  const [timeRemaining, setTimeRemaining] = useState('');
+  const [walletAddressInput, setWalletAddressInput] = useState('');
+  const [bidAmountInput, setBidAmountInput] = useState('');
+
 
   useEffect(() => {
     const fetchImage = async () => {
@@ -33,34 +35,54 @@ function Auction() {
         console.log(responseMaxBid);
         const resultMaxBid = JSON.parse(responseMaxBid.data.result);
         const MaxbidObject = JSON.parse(resultMaxBid.body.message);
+        console.log(MaxbidObject);
         setMaxBid(JSON.stringify(MaxbidObject));
       } catch (error) {
         console.error('Error getting bid:', error);
       }
     };
-    
 
+
+    const fetchTimeRemaining = async () => {
+      try {
+        const responseTimeRemaining = await axios.post('webhookTimeRemaining');
+        console.log(responseTimeRemaining);
+        const resultTimeRemainig = JSON.parse(responseTimeRemaining.data.result);
+        const timeRemainingObject = JSON.parse(resultTimeRemainig.body.message);
+        console.log(timeRemainingObject);
+        //setTimeRemaining(timeRemainingObject.timeRemaining) tengo que implementar el webhook pero remix caido
+      } catch (error) {
+        console.error('Error getting bid:', error);
+      }
+    };
+
+    fetchTimeRemaining();
     fetchImage();
     fetchMaxBid();
-  }, [bid]);
+  }, [bidAmountInput]);
 
-  const handleAddressChange = async (event) => {
-    setAddress(event.target.value);
-    // se puede hacer con un useEffect también, da igual. PD: en un caso hipotetico habria que chequear los llamados a los webhooks
-    // porque se hacen demasiados llamados si es uno por cada modificación en los campos :D, no nos importa para el scope del tp igual.
-    try {
-      const response = await axios.post('https://api.defender.openzeppelin.com/autotasks/413508e9-ac94-4fd1-ab16-01ce2c0d5cc5/runs/webhook/16764d23-28d5-46ba-a418-c064f2089339/a4kfQerDazMhW6BQTEg95', {
-        accountAddress: address,
-      })
-      setBalance(parseInt(JSON.parse(response.data.result).hex));
-    } catch (error) {
-      console.error('Error getting balance:', error);
-    }
+  const handleAddressChange = (event) => {
+    setWalletAddressInput(event.target.value);
   };
 
   const handleBidChange = (event) => {
-    setBid(event.target.value);
+    setBidAmountInput(event.target.value);
   };
+
+  const handleBid = () => {
+    // Obtener los valores ingresados
+    const walletAddress = walletAddressInput;
+    const bidAmount = bidAmountInput;
+    console.log("I BID");
+    console.log(walletAddress);
+    console.log(bidAmount);
+    // Realizar operaciones con los valores
+    // ...
+
+    // Ejecutar otras funciones o acciones necesarias
+    // ...
+  };
+
 
   return (
     <div className="auction-page">
@@ -77,6 +99,11 @@ function Auction() {
         {maxBid && <span className="max-bidder">{maxBid}</span>}
       </div>
 
+      <div className="time-remaining-display">
+        TIME REMAINING:
+        {timeRemaining && <span className="max-bidder">{timeRemaining}</span>}
+      </div>
+
       <div className="balance-display">
         BALANCE:
         {balance && <span className="max-bidder">{balance}</span>}
@@ -85,7 +112,7 @@ function Auction() {
       <div className="input-container">
         {/* Add a container for the address input field */}
         <input
-          value={address}
+          value={walletAddressInput}
           onChange={handleAddressChange}
           className="input-field"
           placeholder="Wallet Address"
@@ -94,7 +121,7 @@ function Auction() {
       <div className="input-container">
         {/* Add a container for the address input field */}
         <input
-          value={bid}
+          value={bidAmountInput}
           onChange={handleBidChange}
           className="input-field"
           placeholder="Bid Amount"
@@ -102,13 +129,13 @@ function Auction() {
       </div>
 
       <div className="button-container">
-        <button className="big-button">
+        <button className="big-button" onClick={handleBid}>
           Bid
         </button>
       </div>
 
       <div className="button-container">
-			  <Link to="..">
+        <Link to="..">
           <button className="custom-button">Back</button>
         </Link>
       </div>
