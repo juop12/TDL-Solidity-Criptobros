@@ -8,7 +8,6 @@ import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "./MyToken.sol";
 
-
 contract Auction is ERC1155Holder {
     using SafeMath for uint256;
     address public creator; // La dirección del creador de la subasta
@@ -70,14 +69,11 @@ contract Auction is ERC1155Holder {
         _;
     }
 
-    modifier validBid() {
+    modifier validBid(uint256 bidValue) {
+        require(bidValue > startPrice, "The bid is lower than the start price");
+        require(bidValue > maxBid, "There already is a higher bid");
         require(
-            msg.value > startPrice,
-            "The bid is lower than the start price"
-        );
-        require(msg.value > maxBid, "There already is a higher bid");
-        require(
-            msg.value >= maxBid + minIncrement,
+            bidValue >= maxBid + minIncrement,
             "The bid has to set a significant increase"
         );
         _;
@@ -112,7 +108,6 @@ contract Auction is ERC1155Holder {
         tokenUri = _uri;
     }
 
-
     // Retorna una lista con las direcciones de los postores y sus respectivas pujas
     function allBids()
         external
@@ -132,86 +127,58 @@ contract Auction is ERC1155Holder {
 
     // Crea una nueva puja (usa los modificadores)
     function placeBid(uint256 bid)
-        external
-        payable
-        open
-        onlyCreator
-        validBid
-        returns (bool)
-    {
-        if (bid >= directBuyPrice) {
-            endTime = block.timestamp;
-        }
+    external
+    open
+    validBid(bid)
+    returns (bool)
+{
+    // Aprueba el Auction contract para transferir el NFT por parte del bidder
+    nft1155.setApprovalForAll(address(this), true);
 
-        if (msg.sender == maxBidder) {
-            bids[bids.length - 1].bid = msg.value;
-
-            return true;
-        }
-
-        if(bid > maxBid){
-            maxBid = bid;
-            maxBidder = msg.sender;
-            bids.push(Bid(msg.sender, bid));
-            return true;
-        }
-        return false;
+    if (bid >= directBuyPrice) {
+        endTime = block.timestamp;
     }
 
+    if (msg.sender == maxBidder) {
+        bids[bids.length - 1].bid = bid;
+
+        return true;
+    }
+
+    if (bid > maxBid) {
+        maxBid = bid;
+        maxBidder = msg.sender;
+        bids.push(Bid(msg.sender, bid));
+        return true;
+    }
+    return false;
+}
+
+
     //Tiempo Restante
-    function timeRemaining()
-        external
-        open
-        onlyCreator
-        view
-        returns (uint256)
-    {
-        return endTime-startTime;
+    function timeRemaining() external view open returns (uint256) {
+        return endTime - startTime;
     }
 
     //Max Bidder
-    function getMaxBidder()
-        external
-        open
-        onlyCreator
-        view
-        returns (address)
-    {
+    function getMaxBidder() external view open returns (address) {
         return maxBidder;
     }
 
     //Max Bid
-    function getMaxBid()
-        external
-        open
-        onlyCreator
-        view
-        returns (uint256)
-    {
+    function getMaxBid() external view open returns (uint256) {
         return maxBid;
     }
 
-        //Max Bid
-    function getUri()
-        external
-        open
-        onlyCreator
-        view
-        returns (string memory)
-    {
+    //Max Bid
+    function getUri() external view open returns (string memory) {
         return tokenUri;
     }
 
     // El postor máximo obtiene el token
     function collect() external ended collector notCancelled returns (bool) {
-        nft1155.safeTransferFrom(
-            creator,
-            maxBidder,
-            tokenId,
-            1,
-            ""
-        );
-        smartContract.safeTransferFrom(maxBidder, creator,0,maxBid,"");
+        nft1155.safeTransferFrom(creator, maxBidder, tokenId, 1, "");
+        smartContract.safeTransferFrom(maxBidder, creator, 0, maxBid, "");
         return true;
     }
 
@@ -224,5 +191,4 @@ contract Auction is ERC1155Holder {
 
         return true;
     }
-
 }
