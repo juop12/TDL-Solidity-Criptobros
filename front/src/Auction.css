@@ -26,7 +26,7 @@ body {
   .time-remaining-display {
     position: absolute;
     top: 20%;
-    left: 500px; /* Ajusta la posición según tus necesidades */
+    left: 100px; /* Ajusta la posición según tus necesidades */
     transform: translateY(-50%);
     font-family: 'Anurati', sans-serif;
     font-size: 28px;

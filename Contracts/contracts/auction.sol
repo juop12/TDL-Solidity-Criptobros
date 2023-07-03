@@ -26,7 +26,6 @@ contract Auction is ERC1155Holder {
     address public maxBidder; // La dirección del postor máximo
     bool public cancelled;
 
-    MyToken smartContract; // El contrato inteligente de MyToken
 
     event NewBid(address indexed _from, uint256 _bid);
     event AuctionEnded(address indexed _winner, uint256 _amount);
@@ -101,7 +100,7 @@ contract Auction is ERC1155Holder {
 
         startTime = block.timestamp;
         endTime = _endTime;
-
+        minIncrement = 5;
         maxBidder = _creator;
         cancelled = false;
         tokenId = _tokenId;
@@ -126,34 +125,27 @@ contract Auction is ERC1155Holder {
     }
 
     // Crea una nueva puja (usa los modificadores)
-    function placeBid(uint256 bid)
-    external
-    open
-    validBid(bid)
-    returns (bool)
-{
-    // Aprueba el Auction contract para transferir el NFT por parte del bidder
-    nft1155.setApprovalForAll(address(this), true);
+    function placeBid(uint256 bid, address bidder) external open validBid(bid) returns (bool) {
+        // Approve the Auction contract to transfer the NFT token on behalf of the bidder
 
-    if (bid >= directBuyPrice) {
-        endTime = block.timestamp;
+        if (bid >= directBuyPrice) {
+            endTime = block.timestamp;
+        }
+
+        if (bidder == maxBidder) {
+            bids[bids.length - 1].bid = bid;
+
+            return true;
+        }
+
+        if (bid > maxBid) {
+            maxBid = bid;
+            maxBidder = bidder;
+            bids.push(Bid(bidder, bid));
+            return true;
+        }
+        return false;
     }
-
-    if (msg.sender == maxBidder) {
-        bids[bids.length - 1].bid = bid;
-
-        return true;
-    }
-
-    if (bid > maxBid) {
-        maxBid = bid;
-        maxBidder = msg.sender;
-        bids.push(Bid(msg.sender, bid));
-        return true;
-    }
-    return false;
-}
-
 
     //Tiempo Restante
     function timeRemaining() external view open returns (uint256) {
@@ -178,7 +170,7 @@ contract Auction is ERC1155Holder {
     // El postor máximo obtiene el token
     function collect() external ended collector notCancelled returns (bool) {
         nft1155.safeTransferFrom(creator, maxBidder, tokenId, 1, "");
-        smartContract.safeTransferFrom(maxBidder, creator, 0, maxBid, "");
+        nft1155.safeTransferFrom(maxBidder, creator, 0, maxBid, "");
         return true;
     }
 
