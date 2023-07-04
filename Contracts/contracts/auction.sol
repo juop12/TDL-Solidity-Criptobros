@@ -60,14 +60,6 @@ contract Auction is ERC1155Holder {
         _;
     }
 
-    modifier collector() {
-        require(
-            msg.sender == maxBidder || msg.sender == creator,
-            "Only the highest bidder can only collect the token"
-        );
-        _;
-    }
-
     modifier validBid(uint256 bidValue, address wallet) {
         require(bidValue > startPrice, "The bid is lower than the start price");
         require(bidValue > maxBid, "There already is a higher bid");
@@ -128,8 +120,6 @@ contract Auction is ERC1155Holder {
 
     // Crea una nueva puja (usa los modificadores)
     function placeBid(uint256 bid, address bidder) external open validBid(bid,bidder) returns (bool) {
-        // Approve the Auction contract to transfer the NFT token on behalf of the bidder
-        nft1155.setApprovalForAll(address(this), true);
         if (bid >= directBuyPrice) {
             endTime = block.timestamp;
         }
@@ -150,27 +140,30 @@ contract Auction is ERC1155Holder {
     }
 
     //Tiempo Restante
-    function timeRemaining() external view open returns (uint256) {
-        return endTime - startTime;
+    function timeRemaining() external view returns (uint256) {
+        if(block.timestamp>endTime){
+            return 0;
+        }
+        return endTime - block.timestamp;
     }
 
     //Max Bidder
-    function getMaxBidder() external view open returns (address) {
+    function getMaxBidder() external view returns (address) {
         return maxBidder;
     }
 
     //Max Bid
-    function getMaxBid() external view open returns (uint256) {
+    function getMaxBid() external view returns (uint256) {
         return maxBid;
     }
 
     //Max Bid
-    function getUri() external view open returns (string memory) {
+    function getUri() external view returns (string memory) {
         return tokenUri;
     }
 
     // El postor máximo obtiene el token
-    function collect() external ended collector notCancelled returns (bool) {
+    function collect() external ended notCancelled returns (bool) {
         nft1155.safeTransferFrom(creator, maxBidder, tokenId, 1, "");
         nft1155.safeTransferFrom(maxBidder, creator, 0, maxBid, "");
         return true;
