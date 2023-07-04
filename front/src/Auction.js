@@ -11,6 +11,8 @@ function Auction() {
   const [timeRemaining, setTimeRemaining] = useState('');
   const [walletAddressInput, setWalletAddressInput] = useState('');
   const [bidAmountInput, setBidAmountInput] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState(null);
 
 
   useEffect(() => {
@@ -64,10 +66,20 @@ function Auction() {
         console.log(timeRemainingObject);
         setTimeRemaining(parseInt(timeRemainingObject.hex));
         console.log("TIEMPO", timeRemaining);
+        const date = new Date(timeRemaining * 1000);
+        console.log(date);
+        const year = date.getFullYear();
+        const month = date.getMonth() + 1; // Los meses en JavaScript son base 0, por lo que sumamos 1.
+        const day = date.getDate();
+        const hours = date.getHours();
+        const minutes = date.getMinutes();
+        const seconds = date.getSeconds();
+        console.log(`${day}/${month}/${year} ${hours}:${minutes}:${seconds}`);
       } catch (error) {
         console.error('Error getting bid:', error);
       }
     };
+
 
     fetchBalance();
     fetchTimeRemaining();
@@ -83,19 +95,26 @@ function Auction() {
     setBidAmountInput(event.target.value);
   };
 
-  const handleBid = () => {
-    // Obtener los valores ingresados
+  
+  const handleBid = async () => {
+    setLoading(true);
+    setResponse(false);
     const walletAddress = walletAddressInput;
     const bidAmount = bidAmountInput;
+
+    const responseBid = await axios.post('https://api.defender.openzeppelin.com/autotasks/c85bb66a-915e-4fce-bdcd-239e2b8351a7/runs/webhook/16764d23-28d5-46ba-a418-c064f2089339/HmyYgJZZ9NtBJ83Kn4rnQy', {
+      walletAddressInput: walletAddressInput,
+      bidAmountInput: bidAmountInput,
+    });
+
+    console.log(responseBid);
     console.log("I BID");
     console.log(walletAddress);
     console.log(bidAmount);
-    // Realizar operaciones con los valores
-    // ...
-
-    // Ejecutar otras funciones o acciones necesarias
-    // ...
+    setLoading(false);
+    setResponse(true);
   };
+
 
 
   return (
@@ -124,7 +143,6 @@ function Auction() {
       </div>
 
       <div className="input-container">
-        {/* Add a container for the address input field */}
         <input
           value={walletAddressInput}
           onChange={handleAddressChange}
@@ -133,7 +151,6 @@ function Auction() {
         />
       </div>
       <div className="input-container">
-        {/* Add a container for the address input field */}
         <input
           value={bidAmountInput}
           onChange={handleBidChange}
@@ -153,6 +170,12 @@ function Auction() {
           <button className="custom-button">Back</button>
         </Link>
       </div>
+      {loading && (
+        <div className="loading-box-auction">
+          <span>Loading...</span>
+        </div>
+      )}
+      {response && <p className="bid-placed-comment">BIDDED</p>}
     </div>
   );
 }

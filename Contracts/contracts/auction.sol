@@ -68,18 +68,20 @@ contract Auction is ERC1155Holder {
         _;
     }
 
-    modifier validBid(uint256 bidValue) {
+    modifier validBid(uint256 bidValue, address wallet) {
         require(bidValue > startPrice, "The bid is lower than the start price");
         require(bidValue > maxBid, "There already is a higher bid");
         require(
             bidValue >= maxBid + minIncrement,
             "The bid has to set a significant increase"
         );
+        uint256 nftBalance = nft1155.balanceOf(wallet, 0);
+        require(nftBalance >= bidValue);
         _;
     }
 
     modifier notCancelled() {
-        require(cancelled != false);
+        require(cancelled != true);
         _;
     }
 
@@ -125,9 +127,9 @@ contract Auction is ERC1155Holder {
     }
 
     // Crea una nueva puja (usa los modificadores)
-    function placeBid(uint256 bid, address bidder) external open validBid(bid) returns (bool) {
+    function placeBid(uint256 bid, address bidder) external open validBid(bid,bidder) returns (bool) {
         // Approve the Auction contract to transfer the NFT token on behalf of the bidder
-
+        nft1155.setApprovalForAll(address(this), true);
         if (bid >= directBuyPrice) {
             endTime = block.timestamp;
         }
