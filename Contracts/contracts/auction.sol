@@ -8,6 +8,13 @@ import "@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol";
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "./MyToken.sol";
 
+struct CollectResult {
+    address creator;
+    address maxBidder;
+    uint256 tokenId;
+    uint256 maxBid;
+}
+
 contract Auction is ERC1155Holder {
     using SafeMath for uint256;
     address public creator; // La dirección del creador de la subasta
@@ -25,7 +32,6 @@ contract Auction is ERC1155Holder {
     uint256 public maxBid; // La puja máxima
     address public maxBidder; // La dirección del postor máximo
     bool public cancelled;
-
 
     event NewBid(address indexed _from, uint256 _bid);
     event AuctionEnded(address indexed _winner, uint256 _amount);
@@ -119,7 +125,12 @@ contract Auction is ERC1155Holder {
     }
 
     // Crea una nueva puja (usa los modificadores)
-    function placeBid(uint256 bid, address bidder) external open validBid(bid,bidder) returns (bool) {
+    function placeBid(uint256 bid, address bidder)
+        external
+        open
+        validBid(bid, bidder)
+        returns (bool)
+    {
         if (bid >= directBuyPrice) {
             endTime = block.timestamp;
         }
@@ -141,7 +152,7 @@ contract Auction is ERC1155Holder {
 
     //Tiempo Restante
     function timeRemaining() external view returns (uint256) {
-        if(block.timestamp>endTime){
+        if (block.timestamp > endTime) {
             return 0;
         }
         return endTime - block.timestamp;
@@ -163,10 +174,15 @@ contract Auction is ERC1155Holder {
     }
 
     // El postor máximo obtiene el token
-    function collect() external ended notCancelled returns (bool) {
-        nft1155.safeTransferFrom(creator, maxBidder, tokenId, 1, "");
-        nft1155.safeTransferFrom(maxBidder, creator, 0, maxBid, "");
-        return true;
+    function collect() external view ended notCancelled returns (CollectResult memory){
+
+        CollectResult memory result;
+        result.creator = creator;
+        result.maxBidder = maxBidder;
+        result.tokenId = tokenId;
+        result.maxBid = maxBid;
+
+        return result;
     }
 
     // Cancela la subasta
