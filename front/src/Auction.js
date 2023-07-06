@@ -18,6 +18,9 @@ function Auction() {
   const [bidAmountInput, setBidAmountInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
+  const [collected, setCollected] = useState(false);
+  const [auctionOpen, setAuctionOpen] = useState(false);
+
 
 
   useEffect(() => {
@@ -37,14 +40,18 @@ function Auction() {
     };
 
     const fetchBalance = async () => {
-      try {
-        const responseBalance = await axios.post('https://api.defender.openzeppelin.com/autotasks/413508e9-ac94-4fd1-ab16-01ce2c0d5cc5/runs/webhook/16764d23-28d5-46ba-a418-c064f2089339/a4kfQerDazMhW6BQTEg95', {
-          accountAddress: "0xd592673053a14308C376D0125133A6770c52e6e5",
-        });
-        let balance = JSON.parse(responseBalance.data.result).hex;
-        setBalance(parseInt(balance));
-      } catch (error) {
-        console.error('Error getting image:', error);
+      if(walletAddressInput.length > 41) {
+        try {
+          const responseBalance = await axios.post('https://api.defender.openzeppelin.com/autotasks/413508e9-ac94-4fd1-ab16-01ce2c0d5cc5/runs/webhook/16764d23-28d5-46ba-a418-c064f2089339/a4kfQerDazMhW6BQTEg95', {
+            accountAddress: "0xd592673053a14308C376D0125133A6770c52e6e5",
+          });
+          let balance = JSON.parse(responseBalance.data.result).hex;
+          setBalance(parseInt(balance));
+        } catch (error) {
+          console.error('Error getting image:', error);
+        }
+      }else{
+        console.log("No hay address");
       }
     };
 
@@ -69,17 +76,9 @@ function Auction() {
         const resultTimeRemainig = JSON.parse(responseTimeRemaining.data.result);
         const timeRemainingObject = JSON.parse(resultTimeRemainig.body.message);
         console.log(timeRemainingObject);
-        setTimeRemaining(parseInt(timeRemainingObject.hex));
-        console.log("TIEMPO", timeRemaining);
-        const date = new Date(timeRemaining * 1000);
-        console.log(date);
-        const year = date.getFullYear();
-        const month = date.getMonth() + 1; // Los meses en JavaScript son base 0, por lo que sumamos 1.
-        const day = date.getDate();
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-        const seconds = date.getSeconds();
-        console.log(`${day}/${month}/${year} ${hours}:${minutes}:${seconds}`);
+        let timeRemaining = parseInt(timeRemainingObject.hex);
+        setTimeRemaining(` ${ timeRemaining / 60 } minutos`);
+
       } catch (error) {
         console.error('Error getting bid:', error);
       }
@@ -112,7 +111,7 @@ function Auction() {
     await provider.send("eth_requestAccounts", []);
 
     // Obtener el contrato nft1155 con la dirección y el abi
-    const nft1155Address = "0x451a3507d323cc99cab301736b5c3bb5f9bb2119";
+    const nft1155Address = "0xcf40426b134BE1c8A3B5Cc99a7816B4A035949C5";
     const nft1155Abi = [
       {
         "inputs": [],
@@ -571,6 +570,39 @@ function Auction() {
             "type": "bytes"
           }
         ],
+        "name": "safeTransfer",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+      },
+      {
+        "inputs": [
+          {
+            "internalType": "address",
+            "name": "from",
+            "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "to",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "id",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "amount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bytes",
+            "name": "data",
+            "type": "bytes"
+          }
+        ],
         "name": "safeTransferFrom",
         "outputs": [],
         "stateMutability": "nonpayable",
@@ -687,503 +719,11 @@ function Auction() {
     ]; // El abi del contrato nft1155
     const nft1155 = new Contract(nft1155Address, nft1155Abi, provider);
 
-    // Obtener el contrato de subasta con la dirección y el abi
-    const auctionAddress = "0x5BF81CEaFA8453fc4f7F4E30883B45410fE1b578";
-    const auctionAbi = [
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "_creator",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "_startPrice",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "_directBuyPrice",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "_endTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "_myTokenAddress",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "_tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "_uri",
-            "type": "string"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "constructor"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "_winner",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "_amount",
-            "type": "uint256"
-          }
-        ],
-        "name": "AuctionEnded",
-        "type": "event"
-      },
-      {
-        "inputs": [],
-        "name": "cancelAuction",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "collect",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "_creator",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "_amount",
-            "type": "uint256"
-          }
-        ],
-        "name": "FundsCollected",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "_winner",
-            "type": "address"
-          }
-        ],
-        "name": "NFTCollected",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "_from",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "_bid",
-            "type": "uint256"
-          }
-        ],
-        "name": "NewBid",
-        "type": "event"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "",
-            "type": "uint256[]"
-          },
-          {
-            "internalType": "bytes",
-            "name": "",
-            "type": "bytes"
-          }
-        ],
-        "name": "onERC1155BatchReceived",
-        "outputs": [
-          {
-            "internalType": "bytes4",
-            "name": "",
-            "type": "bytes4"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          },
-          {
-            "internalType": "bytes",
-            "name": "",
-            "type": "bytes"
-          }
-        ],
-        "name": "onERC1155Received",
-        "outputs": [
-          {
-            "internalType": "bytes4",
-            "name": "",
-            "type": "bytes4"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "bid",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "bidder",
-            "type": "address"
-          }
-        ],
-        "name": "placeBid",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "allBids",
-        "outputs": [
-          {
-            "internalType": "address[]",
-            "name": "",
-            "type": "address[]"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "",
-            "type": "uint256[]"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "name": "bids",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "sender",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "bid",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "cancelled",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "creator",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "directBuyPrice",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "endTime",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "getMaxBid",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "getMaxBidder",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "getUri",
-        "outputs": [
-          {
-            "internalType": "string",
-            "name": "",
-            "type": "string"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "maxBid",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "maxBidder",
-        "outputs": [
-          {
-            "internalType": "address",
-            "name": "",
-            "type": "address"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "minIncrement",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "startPrice",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "startTime",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          {
-            "internalType": "bytes4",
-            "name": "interfaceId",
-            "type": "bytes4"
-          }
-        ],
-        "name": "supportsInterface",
-        "outputs": [
-          {
-            "internalType": "bool",
-            "name": "",
-            "type": "bool"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "timeRemaining",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "tokenId",
-        "outputs": [
-          {
-            "internalType": "uint256",
-            "name": "",
-            "type": "uint256"
-          }
-        ],
-        "stateMutability": "view",
-        "type": "function"
-      }
-    ]; // El abi del contrato de subasta
-    const auction = new Contract(auctionAddress, auctionAbi, provider);
-
     // Obtener la cuenta que está conectada a MetaMask
     const account = await provider.getSigner();
 
     // Aprobar al contrato de subasta para que pueda transferir tus tokens NFT
-    await nft1155.connect(account).setApprovalForAll(auction.address, true);
-
-
-    const walletAddress = walletAddressInput;
-    const bidAmount = bidAmountInput;
+    await nft1155.connect(account).setApprovalForAll("0x1300f9edb982256265ba5c8f6c35609596676d9b", true);
 
     const responseBid = await axios.post('https://api.defender.openzeppelin.com/autotasks/c85bb66a-915e-4fce-bdcd-239e2b8351a7/runs/webhook/16764d23-28d5-46ba-a418-c064f2089339/HmyYgJZZ9NtBJ83Kn4rnQy', {
       walletAddressInput: walletAddressInput,
@@ -1191,14 +731,33 @@ function Auction() {
     });
 
     console.log(responseBid);
-    console.log("I BID");
-    console.log(walletAddress);
-    console.log(bidAmount);
+
     setLoading(false);
     setResponse(true);
-    
+
   };
 
+
+  const handleCollect = async () => {
+
+    setLoading(true);
+    setResponse(false);
+    
+    const responseCollect = await axios.post('https://api.defender.openzeppelin.com/autotasks/47caec5e-2afd-474b-b79e-9a2c2b633215/runs/webhook/16764d23-28d5-46ba-a418-c064f2089339/UMSsqy1fT5H33HCDf3qe4X');
+
+    console.log(responseCollect);
+    console.log("RESPONSE COLLECT",responseCollect.data)
+    console.log("RESPONSE COLLECT STATUS",responseCollect.data.status);
+    setLoading(false);
+
+    if(responseCollect.data.status === 'success') {
+      setCollected(true);
+    } else {
+      setAuctionOpen(true);
+    }
+
+
+  };
 
 
   return (
@@ -1249,6 +808,12 @@ function Auction() {
         </button>
       </div>
 
+      <div className="button-container-collect">
+        <button className="big-button-collect" onClick={handleCollect}>
+          Collect
+        </button>
+      </div>
+
       <div className="button-container">
         <Link to="..">
           <button className="custom-button">Back</button>
@@ -1260,6 +825,12 @@ function Auction() {
         </div>
       )}
       {response && <p className="bid-placed-comment">BIDDED</p>}
+      {auctionOpen && (
+        <div className="loading-box-auction">
+          <span>The auction Is still OPENED</span>
+        </div>
+      )}
+      {collected && <p className="bid-placed-comment">COLLECTED</p>}
     </div>
   );
 }
