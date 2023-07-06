@@ -3,6 +3,8 @@ import React, { useState, useRef } from 'react';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import './Faucet.css'; // Import the CSS file
+import console from './lib/console-browserify';
+import { Link } from 'react-router-dom';
 
 
 function Faucet() {
@@ -50,43 +52,49 @@ function Faucet() {
 
   return (
     <div
-			className="faucet"
-			style={{
-				background:
-					'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 400\'%3E%3Cdefs%3E%3Cpattern id=\'bg_pattern\' width=\'100\' height=\'100\' patternUnits=\'userSpaceOnUse\'%3E%3Crect x=\'0\' y=\'0\' width=\'50\' height=\'25\' fill=\'%2315161A\'/%3E%3Crect x=\'0\' y=\'25\' width=\'25\' height=\'75\' fill=\'%2315161A\'/%3E%3Crect x=\'50\' y=\'75\' width=\'50\' height=\'25\' fill=\'%2315161A\'/%3E%3Crect x=\'50\' y=\'0\' width=\'25\' height=\'75\' fill=\'%2315161A\'/%3E%3C/pattern%3E%3C/defs%3E%3Crect x=\'0\' y=\'0\' width=\'100%25\' height=\'100%25\' fill=\'%23112455\'/%3E%3Crect x=\'0\' y=\'0\' width=\'100%25\' height=\'100%25\' fill=\'url(%23bg_pattern)\'/%3E%3C/svg%3E") center/cover',
-				}}
+		className="faucet"
+		style={{
+			background:
+				'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 400 400\'%3E%3Cdefs%3E%3Cpattern id=\'bg_pattern\' width=\'100\' height=\'100\' patternUnits=\'userSpaceOnUse\'%3E%3Crect x=\'0\' y=\'0\' width=\'50\' height=\'25\' fill=\'%2315161A\'/%3E%3Crect x=\'0\' y=\'25\' width=\'25\' height=\'75\' fill=\'%2315161A\'/%3E%3Crect x=\'50\' y=\'75\' width=\'50\' height=\'25\' fill=\'%2315161A\'/%3E%3Crect x=\'50\' y=\'0\' width=\'25\' height=\'75\' fill=\'%2315161A\'/%3E%3C/pattern%3E%3C/defs%3E%3Crect x=\'0\' y=\'0\' width=\'100%25\' height=\'100%25\' fill=\'%23112455\'/%3E%3Crect x=\'0\' y=\'0\' width=\'100%25\' height=\'100%25\' fill=\'url(%23bg_pattern)\'/%3E%3C/svg%3E") center/cover',
+			}}
     >
 
-			<div className="title">
-				<span className="title-text">Faucet</span>
-			</div>
+		<div className="title">
+			<span className="title-text">Faucet</span>
+		</div>
 
-			<div styles="text-align:center">
-				<input
-					value={address}
-					onChange={handleAddressChange}
-					className="address-field-faucet"
-					placeholder="Wallet Address"
-				/>
-			</div>
-				
-			<div className="button-container">
-				<button
-				onClick={() => handleFaucet(address)}
-				className="faucet-btn"
-				type="button"
-				>
-					<strong>ASK FOR CURRENCY</strong>
-				</button>
-			</div>
+		<div styles="text-align:center">
+			<input
+				value={address}
+				onChange={handleAddressChange}
+				className="address-field-faucet"
+				placeholder="Wallet Address"
+			/>
+		</div>
+			
+		<div className="button-container">
+			<button
+			onClick={() => handleFaucet(address)}
+			className="faucet-btn"
+			type="button"
+			>
+				<strong>ASK FOR CURRENCY</strong>
+			</button>
+		</div>
 
-			{loading && (
-				<div className="loading-box">
-				<span>Loading...</span>
-				</div>
-			)}
+		<div className="button-container">
+			<Link to="..">
+          		<button className="custom-button">Back</button>
+        	</Link>
+      	</div>
 
-			{response && <p className="faucet-comment">DONE</p>}
+		{loading && (
+			<div className="loading-box">
+			<span>Loading...</span>
+			</div>
+		)}
+
+		{response && <p className="faucet-comment">DONE</p>}
       
     </div>
   );
