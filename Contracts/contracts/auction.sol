@@ -34,9 +34,8 @@ contract Auction is ERC1155Holder {
     bool public cancelled;
 
     event NewBid(address indexed _from, uint256 _bid);
-    event AuctionEnded(address indexed _winner, uint256 _amount);
-    event FundsCollected(address indexed _creator, uint256 _amount);
-    event NFTCollected(address indexed _winner);
+    event AuctionCancelled();
+    event CollectDone(address indexed _creator, address indexed _winner, uint256 _amount);
 
     struct Bid {
         address sender;
@@ -137,7 +136,7 @@ contract Auction is ERC1155Holder {
 
         if (bidder == maxBidder) {
             bids[bids.length - 1].bid = bid;
-
+            emit NewBid(bidder, bid);
             return true;
         }
 
@@ -145,6 +144,7 @@ contract Auction is ERC1155Holder {
             maxBid = bid;
             maxBidder = bidder;
             bids.push(Bid(bidder, bid));
+            emit NewBid(bidder, bid);
             return true;
         }
         return false;
@@ -174,13 +174,15 @@ contract Auction is ERC1155Holder {
     }
 
     // El postor máximo obtiene el token
-    function collect() external view ended notCancelled returns (CollectResult memory){
+    function collect() external ended notCancelled returns (CollectResult memory) {
 
         CollectResult memory result;
         result.creator = creator;
         result.maxBidder = maxBidder;
         result.tokenId = tokenId;
         result.maxBid = maxBid;
+
+        emit CollectDone(creator, maxBidder, maxBid);
 
         return result;
     }
@@ -191,6 +193,8 @@ contract Auction is ERC1155Holder {
         maxBid = 0;
         maxBidder = address(0); // Set maxBidder to an invalid address (burn address)
         cancelled = true;
+
+        emit AuctionCancelled();
 
         return true;
     }
